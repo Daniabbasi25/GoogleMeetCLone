@@ -14,7 +14,8 @@
     // "isolatedModules": true,
     "baseUrl": "./app",
     "paths": {
-      "screens": ["screens"]
+      "screens": ["screens"],
+      "navigations": ["navigations"],
     }
   },
   // "include": ["app"]

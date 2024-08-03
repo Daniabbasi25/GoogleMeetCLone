@@ -1,11 +1,11 @@
-import {View, Text, SafeAreaView} from 'react-native';
+import {SafeAreaView} from 'react-native';
 import React from 'react';
-import {LoginScreen} from 'screens';
+import {RootStack} from 'navigations';
 
 const App = () => {
   return (
     <SafeAreaView style={{flex: 1}}>
-      <LoginScreen />
+      <RootStack />
     </SafeAreaView>
   );
 };
