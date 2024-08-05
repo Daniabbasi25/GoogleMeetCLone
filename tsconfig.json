@@ -16,6 +16,7 @@
     "paths": {
       "screens": ["screens"],
       "navigations": ["navigations"],
+      "services": ["services"],
     }
   },
   // "include": ["app"]

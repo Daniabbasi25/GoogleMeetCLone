@@ -1,15 +1,15 @@
 import {StyleSheet, Text, View, TouchableOpacity, FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import auth from '@react-native-firebase/auth';
 import Icon from 'react-native-vector-icons/Entypo';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation, useTheme} from '@react-navigation/native';
-import {Avatar, Card, IconButton} from 'react-native-paper';
+import {Avatar, Card} from 'react-native-paper';
 
 const GroupListScreen = () => {
   const [data, setData] = useState<any[]>([]);
   const navigation = useNavigation();
   const {colors} = useTheme();
+
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('Groups')
@@ -33,27 +33,34 @@ const GroupListScreen = () => {
 
   return (
     <View style={{flex: 1}}>
-      {/* <TouchableOpacity
-        onPress={() => {
-          auth()
-            .signOut()
-            .then(() => console.log('User signed out!'));
-        }}>
-        <Text>UserStack = {auth().currentUser?.email}</Text>
-      </TouchableOpacity> */}
-
       <FlatList
         data={data}
         keyExtractor={item => item.id}
-        renderItem={({item, index}) => (
-          <View style={styles.card}>
+        ListEmptyComponent={() => (
+          <View style={styles.emptyComponent}>
+            <Text style={styles.emptyText}>No Group Found</Text>
+          </View>
+        )}
+        renderItem={({item}) => (
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate(
+                'ChatScreen' as never,
+                {
+                  groupId: 'groupId',
+                  userId: 'userId',
+                  userToken: 'userToken',
+                } as never,
+              )
+            }
+            style={styles.card}>
             <Card.Title
               title={item?.name}
               left={props => (
                 <Avatar.Image {...props} source={{uri: item.image}} />
               )}
             />
-          </View>
+          </TouchableOpacity>
         )}
       />
       <TouchableOpacity
@@ -89,5 +96,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 5,
     borderBlockColor: 'gray',
+  },
+  emptyComponent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 18,
   },
 });

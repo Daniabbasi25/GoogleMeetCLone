@@ -3,3 +3,4 @@ export {default as SignUpScreen} from './auth/SignUpScreen';
 // users screens
 export {default as GroupListScreen} from './user/GroupListScreen';
 export {default as CreateGroupScreen} from './user/CreateGroup';
+export {default as ChatScreen} from './user/ChatScreen';

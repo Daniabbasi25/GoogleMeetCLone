@@ -7,6 +7,7 @@ module.exports = {
   },
   plugins: [
    [ '@babel/plugin-transform-private-methods',{ loose: true }],
+   ['react-native-reanimated/plugin'],
     [
       'module-resolver',
       {
@@ -14,6 +15,7 @@ module.exports = {
         alias: {
           screens: './app/screens',
           navigations: './app/navigations',
+          services: './app/services',
         },
       },
     ],
