@@ -3,6 +3,7 @@ import React, {useState} from 'react';
 import {TextInput, Button, Snackbar} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -13,14 +14,23 @@ const SignUpScreen = () => {
     undefined,
   );
   const handleSignUp = async (): Promise<void> => {
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        setSnackMessage('User signed Up and Login!');
-      })
-      .catch(error => {
-        setSnackMessage(String(error));
-      });
+    try {
+      const res = await auth().createUserWithEmailAndPassword(email, password);
+      console.log('User signed up:', res.user);
+
+      const userDoc = {
+        email: res.user.email,
+        image: `https://avatar.iran.liara.run/username?username=${res.user.email}`,
+      };
+
+      await firestore().collection('Users').doc(res.user.uid).set(userDoc);
+      console.log('User document created:', userDoc);
+
+      setSnackMessage('User signed up and logged in!');
+    } catch (error) {
+      console.error('Error during sign up or document creation:', error);
+      setSnackMessage(String(error));
+    }
   };
 
   return (
