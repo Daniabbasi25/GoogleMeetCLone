@@ -3,13 +3,16 @@ import {View, StyleSheet} from 'react-native';
 
 import {CommonActions} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Text, BottomNavigation} from 'react-native-paper';
+import {Text, BottomNavigation, useTheme} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {GroupListScreen} from 'screens';
+import CreateGroupStack from './CreateGroupStack';
 
 const Tab = createBottomTabNavigator();
 
 export default function MyComponent() {
+  const {colors} = useTheme(); // Get the theme colors
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -43,22 +46,15 @@ export default function MyComponent() {
 
             return null;
           }}
-          getLabelText={({route}) => {
-            const {options} = descriptors[route.key];
-            const label =
-              options.tabBarLabel !== undefined
-                ? options.tabBarLabel
-                : options.title !== undefined
-                ? options.title
-                : route.title;
-
-            return label;
-          }}
+          labeled={false}
+          style={{backgroundColor: '#fff'}}
+          activeIndicatorStyle={{backgroundColor: colors.primary}}
+          activeColor="#fff"
         />
       )}>
       <Tab.Screen
         name="Home"
-        component={GroupListScreen}
+        component={CreateGroupStack}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({color, size}) => {
