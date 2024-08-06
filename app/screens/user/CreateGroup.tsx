@@ -2,6 +2,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import React, {useState} from 'react';
 import {TextInput, Button, Snackbar} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const CreateGroupScreen = ({navigation, route}: any) => {
   // const navigation = useNavigation();
@@ -16,6 +17,13 @@ const CreateGroupScreen = ({navigation, route}: any) => {
       const userDoc = {
         name: name,
         image: `https://avatar.iran.liara.run/username?username=${name}`,
+        members: [
+          {
+            id: auth().currentUser?.uid,
+            email: auth().currentUser?.email,
+            admin: true,
+          },
+        ],
       };
 
       await firestore().collection('Groups').add(userDoc);
