@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation, useTheme} from '@react-navigation/native';
 import {Avatar, Card} from 'react-native-paper';
+import auth from '@react-native-firebase/auth';
+import {GroupListItem} from 'components';
 
 const GroupListScreen = () => {
   const [data, setData] = useState<any[]>([]);
@@ -15,9 +17,21 @@ const GroupListScreen = () => {
       .collection('Groups')
       .onSnapshot(
         querySnapshot => {
-          const ALLDATA = [];
+          const ALLDATA: any[] = [];
           querySnapshot.forEach(documentSnapshot => {
-            ALLDATA.push({id: documentSnapshot.id, ...documentSnapshot.data()});
+            if (
+              documentSnapshot
+                .data()
+                ?.members?.find(
+                  (item: {status: string; id: string | undefined}) =>
+                    item.id === auth().currentUser?.uid &&
+                    item.status !== 'Reject',
+                )
+            )
+              ALLDATA.push({
+                id: documentSnapshot.id,
+                ...documentSnapshot.data(),
+              });
           });
           setData(ALLDATA);
           console.log('Updated Groups: ', ALLDATA);
@@ -41,26 +55,8 @@ const GroupListScreen = () => {
             <Text style={styles.emptyText}>No Group Found</Text>
           </View>
         )}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate(
-                'ChatScreen' as never,
-                {
-                  groupId: 'groupId',
-                  userId: 'userId',
-                  userToken: 'userToken',
-                } as never,
-              )
-            }
-            style={styles.card}>
-            <Card.Title
-              title={item?.name}
-              left={props => (
-                <Avatar.Image {...props} source={{uri: item.image}} />
-              )}
-            />
-          </TouchableOpacity>
+        renderItem={({item, index}) => (
+          <GroupListItem index={index} item={item} />
         )}
       />
       <TouchableOpacity

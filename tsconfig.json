@@ -17,6 +17,7 @@
       "screens": ["screens"],
       "navigations": ["navigations"],
       "services": ["services"],
+      "components": ["components"],
     }
   },
   // "include": ["app"]

@@ -16,6 +16,7 @@ module.exports = {
           screens: './app/screens',
           navigations: './app/navigations',
           services: './app/services',
+          components: './app/components',
         },
       },
     ],
