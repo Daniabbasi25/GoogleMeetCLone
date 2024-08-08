@@ -1,9 +1,34 @@
-import {SafeAreaView} from 'react-native';
-import React from 'react';
+import {SafeAreaView, PermissionsAndroid} from 'react-native';
+import React, {useEffect} from 'react';
 import {RootStack} from 'navigations';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import messaging from '@react-native-firebase/messaging';
 
 const App = () => {
+  async function requestUserPermission() {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    );
+
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  const getToken = async (): Promise<void> => {
+    const token = await messaging().getToken();
+    console.log('Token', token);
+  };
+
+  useEffect(() => {
+    requestUserPermission();
+    getToken();
+  }, []);
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaView style={{flex: 1}}>

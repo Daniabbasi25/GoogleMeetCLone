@@ -34,7 +34,6 @@ const GroupListScreen = () => {
               });
           });
           setData(ALLDATA);
-          console.log('Updated Groups: ', ALLDATA);
         },
         error => {
           console.error('Error fetching real-time updates: ', error);
