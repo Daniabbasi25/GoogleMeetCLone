@@ -71,10 +71,18 @@ export default GroupListItem;
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
     width: '95%',
     alignSelf: 'center',
     marginTop: 5,
-    borderBlockColor: 'gray',
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });
