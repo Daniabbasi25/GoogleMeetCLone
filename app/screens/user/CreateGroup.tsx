@@ -4,6 +4,7 @@ import {TextInput, Button, Snackbar, Modal} from 'react-native-paper';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import {UserFlatList} from 'components';
+import messaging from '@react-native-firebase/messaging';
 
 const CreateGroupScreen = ({navigation, route}: any) => {
   // const navigation = useNavigation();
@@ -61,6 +62,21 @@ const CreateGroupScreen = ({navigation, route}: any) => {
           members: firestore.FieldValue.arrayUnion(newMember),
         });
       setSnackMessage('Member added successfully');
+      const userDoc = await firestore().collection('Users').doc(id).get();
+      const deviceToken = userDoc.data()?.fcmtoken;
+
+      if (deviceToken) {
+        // Send a notification to the user
+        await messaging().sendToDevice(deviceToken, {
+          notification: {
+            title: 'Group Invitation',
+            body: `You have been added to the group by ${email}`,
+          },
+          data: {
+            groupId: groupid,
+          },
+        });
+      }
       setData(prevData => prevData.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error adding member to group:', error);

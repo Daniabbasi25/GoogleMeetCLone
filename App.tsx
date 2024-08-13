@@ -3,7 +3,8 @@ import React, {useEffect} from 'react';
 import {RootStack} from 'navigations';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
-
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 const App = () => {
   async function requestUserPermission() {
     PermissionsAndroid.request(
@@ -23,12 +24,16 @@ const App = () => {
   const getToken = async (): Promise<void> => {
     const token = await messaging().getToken();
     console.log('Token', token);
+    await firestore().collection('Users').doc(auth().currentUser?.uid).update({
+      fcmtoken: token,
+    });
   };
 
   useEffect(() => {
     requestUserPermission();
     getToken();
-  }, []);
+  }, [auth().currentUser?.uid]);
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <SafeAreaView style={{flex: 1}}>
